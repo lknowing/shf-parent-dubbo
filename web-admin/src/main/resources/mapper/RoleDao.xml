@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.dao.RoleDao">
+
+    <!--复用查询的字段-->
+    <sql id="column">
+        id,role_name,role_code,description,create_time,update_time,is_deleted
+    </sql>
+
+    <insert id="insert" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+        insert into acl_role (id,role_name, role_code, description)  values (#{id},#{roleName},#{roleCode},#{description})
+    </insert>
+
+    <!--查询所有-->
+    <select id="findAll" resultType="Role">
+        select
+        <include refid="column"></include>
+        from acl_role where is_deleted = 0
+    </select>
+
+</mapper>
