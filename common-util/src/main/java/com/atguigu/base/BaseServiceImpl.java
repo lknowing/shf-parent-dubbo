@@ -37,7 +37,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     @Override
     public PageInfo<T> findPage(Map<String, Object> filters) {
         int pageNum = CastUtil.castInt(filters.get("pageNum"), 1);
-        int pageSize = CastUtil.castInt(filters.get("pageSize"), 2);
+        int pageSize = CastUtil.castInt(filters.get("pageSize"), 3);
         //开启分页功能 将这两个参数与当前线程进行绑定，传递给dao层
         // select 语句最后 自动增加 limit ?,?  limit startIndex,pageSize
         // startIndex = (pageNum-1)*pageSize

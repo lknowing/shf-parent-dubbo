@@ -5,41 +5,57 @@
 
 <mapper namespace="com.atguigu.dao.AdminDao">
 
+    <resultMap id="Admin" type="Admin">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="name" column="name"></result>
+        <result property="phone" column="phone"></result>
+        <result property="headUrl" column="head_url"></result>
+        <result property="description" column="description"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="isDeleted" column="is_deleted"></result>
+    </resultMap>
+
     <!--复用查询的字段-->
     <sql id="column">
-        username,password,role_code,description,create_time,update_time,is_deleted
+        id,username,password,name,phone,head_url,description,create_time,update_time,is_deleted
     </sql>
 
     <!--
         保存： bean对象保存前id属性是没有值的。保存后，执行了insert语句，数据库分配主键值。
             mybatis框架会获取数据库分配的主键值，并赋值给bean对象的id属性。这个过程，我们称为主键回填。
     -->
-    <insert id="insert" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
-        insert into acl_role (id,role_name, role_code, description)  values (#{id},#{roleName},#{roleCode},#{description})
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into acl_admin (username,password,name,phone,head_url,description)
+        values (#{username},#{password},#{name},#{phone},#{headUrl},#{description})
     </insert>
 
-    <!--查询所有-->
-    <select id="findAll" resultType="Role">
+    <select id="findById" resultMap="Admin">
         select
         <include refid="column"></include>
-        from acl_role where is_deleted = 0
-    </select>
-
-    <select id="findById" parameterType="long" resultType="role">
-        select
-        <include refid="column"></include>
-        from acl_role where id = #{id} and is_deleted = 0
+        from acl_admin where id = #{id} and is_deleted = 0
     </select>
 
 
     <update id="update">
-        update acl_role
+        update acl_admin
         <set>
-            <if test="roleName!=null and roleName!=''">
-                role_name=#{roleName},
+            <if test="username!=null and username!=''">
+                username=#{username},
             </if>
-            <if test="roleCode!=null and roleCode!=''">
-                role_code=#{roleCode},
+            <if test="password!=null and password!=''">
+                password=#{password},
+            </if>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="headUrl!=null and headUrl!=''">
+                head_url=#{headUrl},
             </if>
             <if test="description!=null and description!=''">
                 description=#{description},
@@ -50,23 +66,35 @@
     </update>
 
     <!--软删除 修改is_deleted字段值：0 表示正常，1 表示被删除-->
-    <delete id="delete" parameterType="long">
-        update acl_role set update_time=now(),is_deleted = 1 where id = #{id}
+    <delete id="delete">
+        update acl_admin set update_time=now(),is_deleted = 1 where id = #{id}
     </delete>
 
     <sql id="where">
         <where>
-            <if test="roleName!=null and roleName!=''">
-                role_name = #{roleName}
+            <if test="name!=null and name!=''">
+                and name = #{name}
+            </if>
+            <if test="username!=null and username!=''">
+                and username = #{username}
+            </if>
+            <if test="phone!=null and phone!=''">
+                and phone = #{phone}
+            </if>
+            <if test="createTimeBegin!=null and createTimeBegin!=''">
+                and create_time >= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd!=null and createTimeEnd!=''">
+                and create_time &lt;= #{createTimeEnd}
             </if>
             and is_deleted = 0
         </where>
     </sql>
 
-    <select id="findPage" parameterType="map" resultType="Role">
+    <select id="findPage" resultMap="Admin">
         select
         <include refid="column"></include>
-        from acl_role
+        from acl_admin
         <include refid="where"></include>
         order by id desc
     </select>
