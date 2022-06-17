@@ -62,7 +62,7 @@
     <sql id="where">
         <where>
             <if test="roleName!=null and roleName!=''">
-                role_name = #{roleName}
+                role_name like concat('%',#{roleName},'%')
             </if>
             and is_deleted = 0
         </where>

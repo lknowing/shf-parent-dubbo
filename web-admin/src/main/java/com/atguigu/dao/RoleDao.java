@@ -15,6 +15,7 @@ import java.util.Map;
  * @FileName: RoleDao
  */
 public interface RoleDao extends BaseDao<Role> {
+    //模块特有的方法 声明到子接口中 公共的声明到父接口中
     List<Role> findAll();
 
 }

@@ -32,6 +32,7 @@ public class BaseController {
 
     /**
      * 封装页面提交的分页参数及搜索条件
+     * 给子类用 使用protected 受保护的
      *
      * @param request
      * @return
@@ -54,7 +55,7 @@ public class BaseController {
             filters.put("pageNum", 1);
         }
         if (!filters.containsKey("pageSize")) {
-            filters.put("pageSize", 10);
+            filters.put("pageSize", 2);
         }
 
         return filters;
