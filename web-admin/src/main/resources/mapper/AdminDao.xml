@@ -5,6 +5,7 @@
 
 <mapper namespace="com.atguigu.dao.AdminDao">
 
+    <!--映射：ORM Object-Relationship Mapping-->
     <resultMap id="Admin" type="Admin">
         <id property="id" column="id"></id>
         <result property="username" column="username"></result>

@@ -57,7 +57,6 @@ public class BaseController {
         if (!filters.containsKey("pageSize")) {
             filters.put("pageSize", 3);
         }
-
         return filters;
     }
 }
