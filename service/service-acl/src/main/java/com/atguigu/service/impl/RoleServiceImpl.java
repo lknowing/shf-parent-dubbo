@@ -6,7 +6,7 @@ import com.atguigu.base.BaseServiceImpl;
 import com.atguigu.dao.RoleDao;
 import com.atguigu.entity.Role;
 import org.springframework.transaction.annotation.Transactional;
-import service.RoleService;
+import com.atguigu.service.RoleService;
 import javax.annotation.Resource;
 import java.util.List;
 

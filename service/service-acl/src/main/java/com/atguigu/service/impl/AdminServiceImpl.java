@@ -6,7 +6,7 @@ import com.atguigu.base.BaseServiceImpl;
 import com.atguigu.dao.AdminDao;
 import com.atguigu.entity.Admin;
 import org.springframework.transaction.annotation.Transactional;
-import service.AdminService;
+import com.atguigu.service.AdminService;
 import javax.annotation.Resource;
 
 /**
