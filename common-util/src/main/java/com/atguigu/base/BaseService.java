@@ -21,5 +21,5 @@ public interface BaseService<T> {
 
     void delete(Serializable id);
 
-    PageInfo findPage(Map<String, Object> filters);
+    PageInfo<T> findPage(Map<String, Object> filters);
 }
