@@ -8,6 +8,7 @@ import com.atguigu.entity.Admin;
 import org.springframework.transaction.annotation.Transactional;
 import com.atguigu.service.AdminService;
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * title:
@@ -25,5 +26,10 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin> implements AdminSer
     @Override
     protected BaseDao<Admin> getEntityDao() {
         return adminDao;
+    }
+
+    @Override
+    public List<Admin> findAll() {
+        return adminDao.findAll();
     }
 }

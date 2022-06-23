@@ -3,17 +3,19 @@ package com.atguigu.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.atguigu.base.BaseController;
 import com.atguigu.entity.Admin;
+import com.atguigu.util.QiniuUtils;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 import com.atguigu.service.AdminService;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * title:
@@ -29,9 +31,31 @@ public class AdminController extends BaseController {
     private static final String PAGE_CREATE = "admin/create";
     private static final String ACTION_LIST = "redirect:/admin";
     private static final String PAGE_EDIT = "admin/edit";
+    private final static String PAGE_UPLOAD_SHOW = "admin/upload";
 
     @Reference
     AdminService adminService;
+
+    @PostMapping("/upload/{id}")
+    public String upload(@PathVariable Long id,
+                         @RequestParam(value = "file") MultipartFile file,
+                         HttpServletRequest request) throws IOException {
+        String newFileName =  UUID.randomUUID().toString() ;
+        // 上传图片
+        QiniuUtils.upload2Qiniu(file.getBytes(),newFileName);
+        String url= "http://rdv5dnxaq.hn-bkt.clouddn.com/"+ newFileName;
+        Admin admin = new Admin();
+        admin.setId(id);
+        admin.setHeadUrl(url);
+        adminService.update(admin);
+        return this.successPage(MESSAGE_SUCCESS, request);
+    }
+
+    @GetMapping("/uploadShow/{id}")
+    public String uploadShow(ModelMap model, @PathVariable Long id) {
+        model.addAttribute("id", id);
+        return PAGE_UPLOAD_SHOW;
+    }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {

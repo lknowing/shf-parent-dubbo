@@ -3,6 +3,8 @@ package com.atguigu.dao;
 import com.atguigu.base.BaseDao;
 import com.atguigu.entity.Admin;
 
+import java.util.List;
+
 /**
  * title:
  *
@@ -11,4 +13,5 @@ import com.atguigu.entity.Admin;
  * @FileName: AdminDao
  */
 public interface AdminDao extends BaseDao<Admin> {
+    List<Admin> findAll();
 }
