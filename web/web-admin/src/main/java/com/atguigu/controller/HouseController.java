@@ -96,7 +96,7 @@ public class HouseController extends BaseController {
         //1.获取房源实体对象
         House house = houseService.findById(id);
         //2.小区数据
-        List<Community> communityList = communityService.findALl();
+        List<Community> communityList = communityService.findAll();
         //3.六个数据字段集合
         List<Dict> houseTypeList = dictService.findListByDictCode("houseType");
         List<Dict> floorList = dictService.findListByDictCode("floor");
@@ -127,7 +127,7 @@ public class HouseController extends BaseController {
     @RequestMapping("/create")
     public String create(Model model) {
         //2.小区数据
-        List<Community> communityList = communityService.findALl();
+        List<Community> communityList = communityService.findAll();
         //3.六个数据字段集合
         List<Dict> houseTypeList = dictService.findListByDictCode("houseType");
         List<Dict> floorList = dictService.findListByDictCode("floor");
@@ -153,7 +153,7 @@ public class HouseController extends BaseController {
         //1.分页数据
         PageInfo<House> page = houseService.findPage(filters);
         //2.小区数据
-        List<Community> communityList = communityService.findALl();
+        List<Community> communityList = communityService.findAll();
         //3.六个数据字段集合
         List<Dict> houseTypeList = dictService.findListByDictCode("houseType");
         List<Dict> floorList = dictService.findListByDictCode("floor");

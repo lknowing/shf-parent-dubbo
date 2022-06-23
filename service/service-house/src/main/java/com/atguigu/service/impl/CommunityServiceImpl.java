@@ -59,7 +59,7 @@ public class CommunityServiceImpl extends BaseServiceImpl<Community> implements 
     }
 
     @Override
-    public List<Community> findALl() {
+    public List<Community> findAll() {
         return communityDao.findAll();
     }
 

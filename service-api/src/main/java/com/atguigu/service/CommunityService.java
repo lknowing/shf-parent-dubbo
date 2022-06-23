@@ -13,5 +13,5 @@ import java.util.List;
  * @FileName: CommunityService
  */
 public interface CommunityService extends BaseService<Community> {
-    List<Community> findALl();
+    List<Community> findAll();
 }
