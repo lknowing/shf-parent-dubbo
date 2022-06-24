@@ -2,9 +2,11 @@ package com.atguigu.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.atguigu.base.BaseController;
+import com.atguigu.entity.House;
 import com.atguigu.entity.HouseImage;
 import com.atguigu.result.Result;
 import com.atguigu.service.HouseImageService;
+import com.atguigu.service.HouseService;
 import com.atguigu.util.QiniuUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +35,9 @@ public class HouseImageController extends BaseController {
     @Reference
     HouseImageService houseImageService;
 
+    @Reference
+    HouseService houseService;
+
     @RequestMapping("/delete/{houseId}/{id}")
     public String delete(@PathVariable("houseId") Long houseId, @PathVariable("id") Integer id) {
         HouseImage houseImage = houseImageService.findById(id);
@@ -58,12 +63,17 @@ public class HouseImageController extends BaseController {
                 //上传的文件地址有效期一个月
                 String houseImageUrl = "http://rdv5dnxaq.hn-bkt.clouddn.com/" + newFileName;
                 //将图片路径信息等数据保存到数据库
-                HouseImage houseImage = new HouseImage();
-                houseImage.setHouseId(houseId);
-                houseImage.setImageName(newFileName);
-                houseImage.setImageUrl(houseImageUrl);
-                houseImage.setType(type);
-                houseImageService.insert(houseImage);
+                if (type != 0) {
+                    HouseImage houseImage = new HouseImage();
+                    houseImage.setHouseId(houseId);
+                    houseImage.setImageName(newFileName);
+                    houseImage.setImageUrl(houseImageUrl);
+                    houseImage.setType(type);
+                    houseImageService.insert(houseImage);
+                } else {
+                    House house = houseService.findById(houseId);
+
+                }
             }
         }
         return Result.ok();
@@ -77,4 +87,5 @@ public class HouseImageController extends BaseController {
         model.addAttribute("type", type);
         return PAGE_UPLOAD_SHOW;
     }
+
 }
