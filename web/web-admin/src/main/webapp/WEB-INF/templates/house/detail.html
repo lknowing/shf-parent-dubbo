@@ -90,7 +90,7 @@
                                     <h3>首页图片信息</h3>
                                     <a class="btn btn-xs btn-primary" id="upload0">上传首页图片</a>
                                 </div>
-                                <div class="ibox-content" th:if="${house.defaultImageUrl!=''}">
+                                <div class="ibox-content" th:if="${house.defaultImageUrl != ''}">
                                     <img alt="image" th:src="${house.defaultImageUrl}" style="width: 300px; height: 200px;">
                                     <a th:attr="data-id=${house.id}" class="deleteImages">删除</a>
                                 </div>
