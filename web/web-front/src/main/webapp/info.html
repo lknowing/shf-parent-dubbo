@@ -15,7 +15,50 @@
     <script src="./static/js/util.js"></script>
     <script src="./static/js/swiper-bundle.min.js"></script>
     <style>
-        .swiper{width:100%;height:100%}.swiper{width:100%;height:300px;margin-left:auto;margin-right:auto}.swiper-slide{background-size:cover;background-position:center}.mySwiper2{height:80%;width:100%}.mySwiper{height:20%;box-sizing:border-box;padding:10px 0}.mySwiper .swiper-slide{width:25%;height:100%;opacity:.4}.mySwiper .swiper-slide-thumb-active{opacity:1}.swiper-slide img{display:block;width:100%;height:100%;object-fit:cover}
+        .swiper {
+            width: 100%;
+            height: 100%
+        }
+
+        .swiper {
+            width: 100%;
+            height: 300px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .swiper-slide {
+            background-size: cover;
+            background-position: center
+        }
+
+        .mySwiper2 {
+            height: 80%;
+            width: 100%
+        }
+
+        .mySwiper {
+            height: 20%;
+            box-sizing: border-box;
+            padding: 10px 0
+        }
+
+        .mySwiper .swiper-slide {
+            width: 25%;
+            height: 100%;
+            opacity: .4
+        }
+
+        .mySwiper .swiper-slide-thumb-active {
+            opacity: 1
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
     </style>
     <script type="text/javascript">
         $(function () {
@@ -30,7 +73,14 @@
     <div class="header">
         <div class="width1190">
             <div class="fl">您好，欢迎来到尚好房！</div>
-            <div class="fr">
+            <div class="fr" v-if="userInfo.nickName!=''">
+                {{userInfo.nickName}} |
+                <a href="javascript:;" @click="logout()">退出</a> |
+                <a href="/follow.html">我的关注</a> |
+                <a href="javascript:;">加入收藏</a> |
+                <a href="javascript:;">设为首页</a>
+            </div>
+            <div class="fr" v-else>
                 <a href="login.html">登录</a> |
                 <a href="register.html">注册</a> |
                 <a href="javascript:;">加入收藏</a> |
@@ -58,10 +108,11 @@
             <div class="proImg fl">
                 <!--<img src="/static/images/fangt1.jpg"/>-->
 
-                <div style="--swiper-navigation-color: #F2F2F2; --swiper-pagination-color: #F2F2F2" class="swiper mySwiper2">
+                <div style="--swiper-navigation-color: #F2F2F2; --swiper-pagination-color: #F2F2F2"
+                     class="swiper mySwiper2">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="item in houseImage1List" :key="item.id" >
-                            <img :src="item.imageUrl" />
+                        <div class="swiper-slide" v-for="item in houseImage1List" :key="item.id">
+                            <img :src="item.imageUrl"/>
                         </div>
                     </div>
                     <div class="swiper-button-next"></div>
@@ -79,8 +130,9 @@
             <div class="proText fr">
                 <h3 class="proTitle">
                     {{ house.name }}
-                    <span v-if="isFollow" style="margin-left: 50px; font-size: 14px;"><a href="###">已关注</a></span>
-                    <span v-else style="margin-left: 50px; font-size: 14px;"><a href="###" @click="follow()">关注</a></span>
+                    <span v-if="isFollow" style="margin-left: 50px; font-size: 14px;">已关注</a></span>
+                    <span v-else style="margin-left: 50px; font-size: 14px;"><a href="###"
+                                                                                @click="follow()">关注</a></span>
                 </h3>
                 <div class="proText1">
                     <div class="proText1-detail-pri">
@@ -100,7 +152,8 @@
                             <span>小区名称：</span><a href="#">{{ community.name }}</a>
                         </li>
                         <li>
-                            <span>所在区域：</span><a href="#">{{ community.areaName }}</a><a href="#">{{ community.plateName }}</a>
+                            <span>所在区域：</span><a href="#">{{ community.areaName }}</a><a href="#">{{ community.plateName
+                            }}</a>
                         </li>
                         <li>
                             <span>房屋编号：</span>{{ house.id }}
@@ -165,7 +218,8 @@
             <div class="proList-con-war">
                 特别提示：本房源所示信息仅供参考，购房时以改房屋档案登记信息、产权证信息以及所签订合同条款约定为准；本房源公示信息不作为合同条款，不具有合同约束力。
             </div>
-            <img :src="item.imageUrl" v-for="item in houseImage1List" :key="item.id" style="width: 430px;height: 290px;"/>
+            <img :src="item.imageUrl" v-for="item in houseImage1List" :key="item.id"
+                 style="width: 430px;height: 290px;"/>
         </div><!--proList/-->
         <!--每一个选项卡-->
         <div class="proList">
@@ -350,72 +404,106 @@
     <div class="bg100"></div>
 </div>
 <script>
-new Vue({
-    el: '#item',
+    new Vue({
+        el: '#item',
 
-    data: {
-        id: null,
-        house: {},
-        community: {},
-        houseBroker: {},
-        houseImage1List: [],
-        isFollow: false,
+        data: {
+            id: null,
+            house: {},
+            community: {},
+            houseBroker: {},
+            houseImage1List: [],
+            isFollow: false,
 
-        isLoad: false
-    },
+            isLoad: false,
 
-    created() {
-        this.init()
-    },
-
-    mounted () {
-        const timer = window.setInterval(() => {//开启定时任务
-            // 图片加载成功，再去初始化轮播图
-            if(this.isLoad) {//获取请求数据后再执行轮播图初始化
-                this.runSwiper()
-                window.clearInterval(timer);//清理定时任务
+            userInfo: {
+                phone: '',
+                nickName: ''
             }
-        }, 500);
-    },
+        },
 
-    methods: {
-        runSwiper() {
-            var swiper = new Swiper(".mySwiper", {
-                spaceBetween: 10,
-                slidesPerView: 4,
-                freeMode: true,
-                watchSlidesProgress: true
-            })
-            new Swiper(".mySwiper2", {
-                spaceBetween: 10,
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev"
-                },
-                thumbs: {
-                    swiper: swiper
+        created() {
+            this.init();
+            this.login()
+        },
+
+        mounted() {
+            const timer = window.setInterval(() => {//开启定时任务
+                // 图片加载成功，再去初始化轮播图
+                if (this.isLoad) {//获取请求数据后再执行轮播图初始化
+                    this.runSwiper()
+                    window.clearInterval(timer);//清理定时任务
                 }
-            })
+            }, 500);
         },
 
-        init() {
-            this.id = util.getQueryVariable("id")
-            this.fetchData()
-        },
+        methods: {
+            login() {
+                let userInfoString = window.localStorage.getItem("userInfo")
+                if (userInfoString != null && userInfoString != '') {
+                    this.userInfo = JSON.parse(userInfoString)
+                }
+            },
 
-        fetchData() {
-            var that = this
-            axios.get('/house/info/'+this.id).then(function (response) {
-                that.house = response.data.data.house
-                that.community = response.data.data.community
-                that.houseBroker = response.data.data.houseBrokerList[0]
-                that.houseImage1List = response.data.data.houseImage1List
-                that.isFollow = response.data.data.isFollow
-                that.isLoad = true
-            });
+            logout() {
+                axios.get('/userInfo/logout').then(function (response) {
+                    window.localStorage.setItem("userInfo", '')
+                    window.location.href = 'index.html'
+                });
+            },
+            runSwiper() {
+                var swiper = new Swiper(".mySwiper", {
+                    spaceBetween: 10,
+                    slidesPerView: 4,
+                    freeMode: true,
+                    watchSlidesProgress: true
+                })
+                new Swiper(".mySwiper2", {
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev"
+                    },
+                    thumbs: {
+                        swiper: swiper
+                    }
+                })
+            },
+
+            init() {
+                this.id = util.getQueryVariable("id")
+                this.fetchData()
+            },
+
+            fetchData() {
+                var that = this
+                axios.get('/house/info/' + this.id).then(function (response) {
+                    that.house = response.data.data.house
+                    that.community = response.data.data.community
+                    that.houseBroker = response.data.data.houseBrokerList[0]
+                    that.houseImage1List = response.data.data.houseImage1List
+                    that.isFollow = response.data.data.isFollow
+                    that.isLoad = true
+                });
+            },
+
+            follow() {
+                var that = this
+                //路径增加auth是为了进行拦截器权限拦截，未登录不能关注
+                axios.get('/userFollow/auth/follow/' + this.id).then(function (response) {
+                    //如果没登录，拦截器会返回208状态，跳转登录页面
+                    if (response.data.code == 208) {
+                        window.location.href = 'login.html?originUrl=' + window.location.href
+                    } else if (response.data.code == 200) {
+                        that.isFollow = response.data.data
+                    } else {
+                        alert("关注房源失败！")
+                    }
+                });
+            }
         }
-    }
-})
+    })
 </script>
 </body>
 </html>

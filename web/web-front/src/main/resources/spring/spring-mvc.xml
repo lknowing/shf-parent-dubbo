@@ -33,4 +33,12 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/auth/**"/>
+            <bean id="loginInterceptor" class="com.atguigu.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>

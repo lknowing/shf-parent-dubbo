@@ -1,15 +1,9 @@
 package com.atguigu.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.atguigu.entity.Community;
-import com.atguigu.entity.House;
-import com.atguigu.entity.HouseBroker;
-import com.atguigu.entity.HouseImage;
+import com.atguigu.entity.*;
 import com.atguigu.result.Result;
-import com.atguigu.service.CommunityService;
-import com.atguigu.service.HouseBrokerService;
-import com.atguigu.service.HouseImageService;
-import com.atguigu.service.HouseService;
+import com.atguigu.service.*;
 import com.atguigu.vo.HouseQueryVo;
 import com.atguigu.vo.HouseVo;
 import com.github.pagehelper.PageInfo;
@@ -18,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,20 +39,31 @@ public class HouseController {
     @Reference
     HouseImageService houseImageService;
 
+    @Reference
+    UserFollowService userFollowService;
+
     //异步请求处理
     @RequestMapping("/info/{houseId}")
-    public Result<Map<String, Object>> list(@PathVariable("houseId") Long houseId) {
+    public Result<Map<String, Object>> list(@PathVariable("houseId") Long houseId, HttpServletRequest request) {
         House house = houseService.findById(houseId);
         Community community = communityService.findById(house.getCommunityId());
         List<HouseBroker> houseBrokerList = houseBrokerService.findListByHouseId(houseId);
         List<HouseImage> houseImage1List = houseImageService.findList(houseId, 1);
 
+        //----------补充代码 登录后判断当前用户是否已经关注当前房源 将isFollow变成动态值-------------
+        UserInfo userInfo = (UserInfo) request.getSession().getAttribute("USER");
+        boolean isFollow = false;
+        if (null != userInfo) {
+            Long userInfoId = userInfo.getId();
+            isFollow = userFollowService.isFollow(userInfoId, houseId);
+        }
+        //-------------------------------------------------------------------------------
         Map<String, Object> map = new HashMap<>();
         map.put("house", house);
         map.put("community", community);
         map.put("houseBrokerList", houseBrokerList);
         map.put("houseImage1List", houseImage1List);
-        map.put("isFollow", false);
+        map.put("isFollow", isFollow);
         return Result.ok(map);//将分页数据封装在Result中返回,最后转换为JSON串返回
     }
 

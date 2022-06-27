@@ -17,4 +17,6 @@ public interface HouseService extends BaseService<House> {
     void publish(Long id, Integer status);
 
     PageInfo<HouseVo> findListPage(int pageNum, int pageSize, HouseQueryVo houseQueryVo);
+
+    void deletePage(Long houseId);
 }

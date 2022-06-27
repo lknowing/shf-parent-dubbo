@@ -3,6 +3,7 @@ package com.atguigu.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.atguigu.base.BaseController;
 import com.atguigu.entity.Admin;
+import com.atguigu.service.RoleService;
 import com.atguigu.util.QiniuUtils;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
@@ -32,18 +33,47 @@ public class AdminController extends BaseController {
     private static final String ACTION_LIST = "redirect:/admin";
     private static final String PAGE_EDIT = "admin/edit";
     private final static String PAGE_UPLOAD_SHOW = "admin/upload";
+    private static final String PAGE_ASSIGN_ROLE = "admin/assignRole";
 
     @Reference
     AdminService adminService;
+
+    @Reference
+    RoleService roleService;
+
+    /**
+     * 根据用户分配角色
+     *
+     * @param adminId
+     * @param roleIds
+     * @return
+     */
+    @PostMapping("/assignRole")//框架自动分解 roleIds 字符串
+    public String assignRole(@RequestParam("adminId") Long adminId, @RequestParam("roleIds") Long[] roleIds, HttpServletRequest request) {
+        roleService.saveUserRoleRelationShip(adminId, roleIds);
+        return this.successPage(null, request);
+    }
+
+    /**
+     * @param id 用户表主键
+     * @return 分配角色页面 准备两个下拉列选
+     */
+    @RequestMapping("/assignRole/{id}")
+    public String assignRole(@PathVariable("id") Long id, Map map) {
+        Map assginMap = roleService.findRoleByAdminId(id);
+        map.putAll(assginMap);
+        map.put("adminId", id);
+        return PAGE_ASSIGN_ROLE;
+    }
 
     @PostMapping("/upload/{id}")
     public String upload(@PathVariable Long id,
                          @RequestParam(value = "file") MultipartFile file,
                          HttpServletRequest request) throws IOException {
-        String newFileName =  UUID.randomUUID().toString() ;
+        String newFileName = UUID.randomUUID().toString();
         // 上传图片
-        QiniuUtils.upload2Qiniu(file.getBytes(),newFileName);
-        String url= "http://rdv5dnxaq.hn-bkt.clouddn.com/"+ newFileName;
+        QiniuUtils.upload2Qiniu(file.getBytes(), newFileName);
+        String url = "http://rdv5dnxaq.hn-bkt.clouddn.com/" + newFileName;
         Admin admin = new Admin();
         admin.setId(id);
         admin.setHeadUrl(url);

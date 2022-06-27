@@ -56,7 +56,18 @@ public class House extends BaseEntity {
 	private String decorationName;
 	//房屋用途：（字典id）
 	private String houseUseName;
-	
+
+	//默认首页图片
+	private String defaultImageUrl;
+
+	public String getDefaultImageUrl() {
+		return defaultImageUrl;
+	}
+
+	public void setDefaultImageUrl(String defaultImageUrl) {
+		this.defaultImageUrl = defaultImageUrl;
+	}
+
 	public void setCommunityId(Long value) {
 		this.communityId = value;
 	}

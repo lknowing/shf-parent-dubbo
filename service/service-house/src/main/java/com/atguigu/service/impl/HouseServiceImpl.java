@@ -67,6 +67,11 @@ public class HouseServiceImpl extends BaseServiceImpl<House> implements HouseSer
     }
 
     @Override
+    public void deletePage(Long id) {
+        houseDao.deletePage(id);
+    }
+
+    @Override
     public House findById(Serializable id) {
         House house = houseDao.findById(id);
         if (house != null) {

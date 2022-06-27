@@ -16,4 +16,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface HouseDao extends BaseDao<House> {
     Page<HouseVo> findListPage(@Param("vo") HouseQueryVo houseQueryVo);
+
+    void deletePage(Long id);
 }
