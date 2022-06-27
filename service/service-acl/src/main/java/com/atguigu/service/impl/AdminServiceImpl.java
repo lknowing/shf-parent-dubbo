@@ -7,6 +7,7 @@ import com.atguigu.dao.AdminDao;
 import com.atguigu.entity.Admin;
 import org.springframework.transaction.annotation.Transactional;
 import com.atguigu.service.AdminService;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -31,5 +32,10 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin> implements AdminSer
     @Override
     public List<Admin> findAll() {
         return adminDao.findAll();
+    }
+
+    @Override
+    public Admin getByUsername(String username) {
+        return adminDao.getByUsername(username);
     }
 }

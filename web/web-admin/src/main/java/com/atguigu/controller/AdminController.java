@@ -6,6 +6,9 @@ import com.atguigu.entity.Admin;
 import com.atguigu.service.RoleService;
 import com.atguigu.util.QiniuUtils;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -40,6 +43,9 @@ public class AdminController extends BaseController {
 
     @Reference
     RoleService roleService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     /**
      * 根据用户分配角色
@@ -109,6 +115,7 @@ public class AdminController extends BaseController {
     @PostMapping("/save")
     public String save(Admin admin, Model model, HttpServletRequest request) {
         admin.setHeadUrl("http://47.93.148.192:8080/group1/M00/03/F0/rBHu8mHqbpSAU0jVAAAgiJmKg0o148.jpg");
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         adminService.insert(admin);
         //return ACTION_LIST;
         return successPage("保存成功！", request);
@@ -130,6 +137,7 @@ public class AdminController extends BaseController {
      * @return
      */
     @RequestMapping
+    @PreAuthorize("hasAuthority('admin.show')")
     public String index(HttpServletRequest request, Model model) {
         Map<String, Object> filters = getFilters(request);
         //分页对象 包含集合对象 pageNum pageSize pages total等等
